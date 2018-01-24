@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Roman](https://up.htmlacademy.ru/javascript/12/user/257127).
-* Наставник: `Неизвестно`.
+* Наставник: `Вениамин Тамбурин`.
 
 ---
 
