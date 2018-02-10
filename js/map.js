@@ -85,8 +85,6 @@ var generateOffers = function (index) {
       }
     };
   }
-
-  return similarOffers;
 };
 
 generateOffers(8);
