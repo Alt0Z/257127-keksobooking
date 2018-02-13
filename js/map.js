@@ -38,12 +38,11 @@ var hotelPhotos = [
 var hotelTypes = ['flat', 'house', 'bungalo'];
 var checkinTimes = ['12:00', '13:00', '14:00'];
 var checkoutTimes = ['12:00', '13:00', '14:00'];
-var hotelFeatures = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+var hotelFeatures = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'].sort(getRandomIndex);
 var similarOffers = [];
 
 var getRandomInteger = function (min, max) {
-  var randomInteger = min + Math.random() * (max + 1 - min);
-  return Math.floor(randomInteger);
+  return Math.floor(min + Math.random() * (max + 1 - min));
 };
 
 var getFeatures = function () {
@@ -126,6 +125,9 @@ var renderCard = function (card) {
   var popup = document.querySelector('.popup').cloneNode(true);
   var popupFeatures = popup.querySelector('.popup__features');
   var popupPictures = popup.querySelector('.popup__pictures');
+  popup.querySelector('h4').classList += 'popup__type';
+  popup.querySelector('h4 + p').classList += 'popup__rooms';
+  popup.querySelector('h4 + p + p').classList += 'popup__times';
 
   deleteChildren(popupFeatures);
   deleteChildren(popupPictures);
@@ -133,9 +135,9 @@ var renderCard = function (card) {
   popup.querySelector('h3').textContent = card.offer.title;
   popup.querySelector('small').textContent = card.offer.address;
   popup.querySelector('.popup__price').textContent = card.offer.price + ' \u20BD/ночь';
-  popup.querySelector('h4').textContent = card.offer.type;
-  popup.querySelector('h4 + p').textContent = card.offer.rooms + ' комнаты для ' + card.offer.guests + ' гостей';
-  popup.querySelector('h4 + p + p').textContent = 'Заезд после ' + card.offer.checkin + ',' + ' выезд до ' + card.offer.checkout;
+  popup.querySelector('.popup__type').textContent = card.offer.type;
+  popup.querySelector('.popup__rooms').textContent = card.offer.rooms + ' комнаты для ' + card.offer.guests + ' гостей';
+  popup.querySelector('.popup__times').textContent = 'Заезд после ' + card.offer.checkin + ',' + ' выезд до ' + card.offer.checkout;
 
   for (var i = 0; i < card.offer.features.length; i++) {
     var featuresElement = document.createElement('li');
