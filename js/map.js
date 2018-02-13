@@ -125,9 +125,6 @@ var renderCard = function (card) {
   var popup = document.querySelector('.popup').cloneNode(true);
   var popupFeatures = popup.querySelector('.popup__features');
   var popupPictures = popup.querySelector('.popup__pictures');
-  popup.querySelector('h4').classList += 'popup__type';
-  popup.querySelector('h4 + p').classList += 'popup__rooms';
-  popup.querySelector('h4 + p + p').classList += 'popup__times';
 
   deleteChildren(popupFeatures);
   deleteChildren(popupPictures);
