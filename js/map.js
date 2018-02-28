@@ -103,7 +103,7 @@ var renderPin = function (offers) {
     var buttonPin = document.createElement('button');
     var imagePin = document.createElement('img');
 
-    buttonPin.className = 'map__pin';
+    buttonPin.className = 'map__pin el-' + i;
     buttonPin.style.left = offers[i].location.x - PIN_WIDTH / 2 + 'px';
     buttonPin.style.top = offers[i].location.y - PIN_HEIGHT + 'px';
     imagePin.src = offers[i].author.avatar;
@@ -111,6 +111,7 @@ var renderPin = function (offers) {
     imagePin.height = AVATAR_SIZE;
     buttonPin.appendChild(imagePin);
     pinElement.appendChild(buttonPin);
+    buttonPin.addEventListener('click', onClick);
     fragment.appendChild(pinElement);
   }
 
@@ -184,16 +185,6 @@ function getCoords(pin) {
 
 }
 
-var renderedPins = ['<img src="img/avatars/user00.png" width="40" height="40">',
-  '<img src="img/avatars/user01.png" width="40" height="40">',
-  '<img src="img/avatars/user02.png" width="40" height="40">',
-  '<img src="img/avatars/user03.png" width="40" height="40">',
-  '<img src="img/avatars/user04.png" width="40" height="40">',
-  '<img src="img/avatars/user05.png" width="40" height="40">',
-  '<img src="img/avatars/user06.png" width="40" height="40">',
-  '<img src="img/avatars/user07.png" width="40" height="40">',
-  '<img src="img/avatars/user08.png" width="40" height="40">'];
-
 var onMainPinUp = function () {
   var pinX = (Math.round(getCoords(mainPinButton).left));
   var pinY = (Math.round(getCoords(mainPinButton).top));
@@ -206,12 +197,11 @@ var onMainPinUp = function () {
 };
 
 var onClick = function (evt) {
-  for (var i = 0; i < renderedPins.length; i++) {
-    if (evt.path[0].outerHTML === renderedPins[i]) {
-      mapPins.insertBefore(renderCard(similarOffers[i - 1]), mapPins.lastChild);
+  for (var i = 0; i < similarOffers.length; i++) {
+    if (evt.currentTarget.classList.contains('el-' + i)) {
+      mapPins.insertBefore(renderCard(similarOffers[i]), mapPins.lastChild);
     }
   }
 };
 
 mainPinButton.addEventListener('mouseup', onMainPinUp);
-document.addEventListener('click', onClick);
