@@ -168,7 +168,7 @@ var fieldsets = document.querySelectorAll('fieldset');
 var activateMap = function () {
   map.classList.remove('map--faded');
   for (var i = 0; i < fieldsets.length; i++) {
-    fieldsets[i].disabled = false;
+    fieldsets[i].removeAttribute('disabled');
   }
   mapPins.appendChild(renderPin(similarOffers));
   mapPins.querySelector('article').style.display = 'hidden';
