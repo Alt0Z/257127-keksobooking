@@ -164,9 +164,11 @@ var renderCard = function (card) {
 };
 
 var fieldsets = document.querySelectorAll('fieldset');
+var noticeForm = document.querySelector('.notice__form');
 
 var activateMap = function () {
   map.classList.remove('map--faded');
+  noticeForm.classList.remove('notice__form--disabled');
   for (var i = 0; i < fieldsets.length; i++) {
     fieldsets[i].removeAttribute('disabled');
   }
@@ -176,9 +178,12 @@ var activateMap = function () {
 
 // Активация карты
 var mainPinButton = document.querySelector('.map__pin--main');
-var isFirstLaunch = map.classList.contains('map--faded');
 var address = document.querySelector('#address');
 address.value = '0, 0';
+
+var isMapActive = function () {
+  map.classList.contains('map--faded');
+};
 
 function getCoords(pin) {
   var box = pin.getBoundingClientRect();
@@ -195,7 +200,7 @@ var onMainPinUp = function () {
   var pinY = (Math.round(getCoords(mainPinButton).top));
   address.value = pinX + ', ' + pinY;
 
-  if (isFirstLaunch) {
+  if (!isMapActive()) {
     activateMap();
     mainPinButton.removeEventListener('mouseup', onMainPinUp);
   }
