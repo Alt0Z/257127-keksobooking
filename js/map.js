@@ -11,6 +11,8 @@ var MIN_LOCATION_Y = 150;
 var MAX_LOCATION_Y = 500;
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
+var MAIN_PIN_WIDTH = 40;
+var MAIN_PIN_HEIGHT = 44;
 var AVATAR_SIZE = 40;
 var PHOTO_SIZE = 50;
 
@@ -90,25 +92,26 @@ generateOffers(8);
 
 var map = document.querySelector('.map');
 
-var pinTemplate = document.querySelector('template').content;
+var template = document.querySelector('template').content;
 var mapPins = document.querySelector('.map__pins');
-var mapOffers = document.querySelector('.map__filters-container');
 
 var renderPin = function (offers) {
-  var pinElement = pinTemplate.cloneNode(true);
+  var pinElement = template.cloneNode(true);
   var fragment = document.createDocumentFragment();
+
   for (var i = 0; i < offers.length; i++) {
-    var mapPin = document.createElement('button');
+    var buttonPin = document.createElement('button');
     var imagePin = document.createElement('img');
 
-    mapPin.className = 'map__pin';
-    mapPin.style.left = offers[i].location.x - PIN_WIDTH / 2 + 'px';
-    mapPin.style.top = offers[i].location.y - PIN_HEIGHT + 'px';
+    buttonPin.className = 'map__pin el-' + i;
+    buttonPin.style.left = offers[i].location.x - PIN_WIDTH / 2 + 'px';
+    buttonPin.style.top = offers[i].location.y - PIN_HEIGHT + 'px';
     imagePin.src = offers[i].author.avatar;
     imagePin.width = AVATAR_SIZE;
     imagePin.height = AVATAR_SIZE;
-    mapPin.appendChild(imagePin);
-    pinElement.appendChild(mapPin);
+    buttonPin.appendChild(imagePin);
+    pinElement.appendChild(buttonPin);
+    buttonPin.addEventListener('click', onClick);
     fragment.appendChild(pinElement);
   }
 
@@ -145,22 +148,70 @@ var renderCard = function (card) {
   popup.querySelector('.popup__avatar').src = card.author.avatar;
 
   var photoList = document.querySelector('.popup__pictures');
+  var photoElement;
   for (i = 0; i < card.offer.photos.length; i++) {
-    var photoElement = photoList.querySelector('li').cloneNode(true);
+    photoList.removeChild(photoList.firstChild);
+    photoElement = photoList.querySelector('li').cloneNode(true); // ТУТ ПРОБЛЕМА, ВОТ В ЭТОЙ СТРОЧКЕ
+
     photoList.appendChild(photoElement);
 
     photoElement.querySelector('img').style.width = PHOTO_SIZE + 'px';
     photoElement.querySelector('img').style.height = PHOTO_SIZE + 'px';
     photoElement.querySelector('img').src = card.offer.photos[i];
   }
-
+  hotelPhotos.sort(getRandomIndex);
   return popup;
 };
 
+var fieldsets = document.querySelectorAll('fieldset');
+var noticeForm = document.querySelector('.notice__form');
+
 var activateMap = function () {
   map.classList.remove('map--faded');
+  noticeForm.classList.remove('notice__form--disabled');
+  for (var i = 0; i < fieldsets.length; i++) {
+    fieldsets[i].removeAttribute('disabled');
+  }
   mapPins.appendChild(renderPin(similarOffers));
-  map.insertBefore(renderCard(similarOffers[0]), mapOffers);
+  mapPins.querySelector('article').style.display = 'hidden';
 };
 
-activateMap();
+// Активация карты
+var mainPinButton = document.querySelector('.map__pin--main');
+var address = document.querySelector('#address');
+address.value = '0, 0';
+
+var isMapActive = function () {
+  map.classList.contains('map--faded');
+};
+
+function getCoords(pin) {
+  var box = pin.getBoundingClientRect();
+
+  return {
+    top: (box.top + pageYOffset) - MAIN_PIN_HEIGHT,
+    left: (box.left + pageXOffset) - MAIN_PIN_WIDTH / 2
+  };
+
+}
+
+var onMainPinUp = function () {
+  var pinX = (Math.round(getCoords(mainPinButton).left));
+  var pinY = (Math.round(getCoords(mainPinButton).top));
+  address.value = pinX + ', ' + pinY;
+
+  if (!isMapActive()) {
+    activateMap();
+    mainPinButton.removeEventListener('mouseup', onMainPinUp);
+  }
+};
+
+var onClick = function (evt) {
+  for (var i = 0; i < similarOffers.length; i++) {
+    if (evt.currentTarget.classList.contains('el-' + i)) {
+      mapPins.insertBefore(renderCard(similarOffers[i]), mapPins.lastChild);
+    }
+  }
+};
+
+mainPinButton.addEventListener('mouseup', onMainPinUp);
