@@ -22,6 +22,15 @@
       } else {
         fields.title.setCustomValidity('');
       }
+    },
+    price: function () {
+      if (fields.price.validity.rangeUnderflow) {
+        fields.price.setCustomValidity('Для этого типа жилья цена не должна быть меньше ' + fields.price.attributes.min.value + ' рублей');
+      } else if (fields.price.validity.rangeOverflow) {
+        fields.price.setCustomValidity('Цена не должна превышать 1 000 000');
+      } else {
+        fields.price.setCustomValidity('');
+      }
     }
   };
 
@@ -81,6 +90,7 @@
 
   fields.flatType.addEventListener('change', priceCheck);
   fields.title.addEventListener('invalid', onInvalid.title);
+  fields.price.addEventListener('invalid', onInvalid.price);
   fields.timein.addEventListener('change', onTimeinChange);
   fields.timeout.addEventListener('change', onTimeOutChange);
   fields.rooms.addEventListener('change', guestsCheck);
